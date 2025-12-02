@@ -1,0 +1,46 @@
+1.Display Name of the salesperson, customer name and amount of sales. 
+
+SELECT sp.SNAME AS Salesperson, s.customerName, s.amount FROM sales1 s JOIN salesperson sp ON s.status_flags = sp.SID;
+
+2.List employee name and name of managers.
+
+SELECT e.ENAME AS Employee, m.ENAME AS Manager FROM emp e LEFT JOIN emp m ON e.MGR = m.EMPNO;
+
+3.Display details of all departments and the corresponding employees 
+
+SELECT d.DEPTNO, d.DNAME, d.LOC, e.EMPNO, e.ENAME, e.JOB, e.SAL, e.COMM FROM dept d LEFT JOIN emp e ON d.DEPTNO = e.DEPTNO ORDER BY d.DEPTNO, e.ENAME;
+
+4.Display all customer names with their order details (order number and ship date) for the orders shipped in 1987.
+
+SELECT c.CNAME, o.ORDID, o.SHIPDATE FROM ord o JOIN customers c ON o.CUSTID = c.CNUM WHERE YEAR(o.SHIPDATE) = 1987;
+
+5.Display salesman names and names of customers they are dealing with.
+
+SELECT sp.SNAME AS Salesman, s.customerName AS Customer FROM salesperson sp JOIN sales1 s ON s.status_flags = sp.SID;
+
+6.Display salesman who did not earn commission, with customer names whom they are dealing with.
+
+SELECT e.ENAME AS Salesman, s.customerName FROM emp e JOIN sales1 s ON e.EMPNO = s.status_flags WHERE e.JOB = 'SALESMAN' AND (e.COMM IS NULL OR e.COMM = 0);
+	
+7.Display salesman names, salary, commission and their salary grades.
+
+SELECT e.ENAME, e.SAL, e.COMM, g.grade AS SalaryGrade FROM emp e LEFT JOIN salgrade g ON e.SAL BETWEEN g.losal AND g.hisal WHERE e.JOB = 'SALESMAN';
+
+
+
+
+8.Display all Tennis products and their price details (standard and minimum price).
+
+SELECT p.product_id, p.product_name, pr.std_price, pr.min_price FROM products p JOIN product_prices pr ON p.product_id = pr.product_id WHERE p.product_name LIKE '%Tennis%' OR p.category = 'Tennis';
+
+9.Display the products purchased by either JOCKSPORTS (customer number 100) or JUST TENNIS (customer number 103) or both of them.
+
+SELECT DISTINCT oi.product_id, prod.product_name FROM order_items oi JOIN ord o ON oi.ORDID = o.ORDID JOIN prod ON oi.product_id = prod.product_id WHERE o.CUSTID IN (100, 103);
+
+10.Display the department name, and salary of any employee whose salary and commission matches both the salary and commission of any employee in DALLAS.
+
+SELECT DISTINCT d.DNAME, e.SAL, e.COMM FROM emp e JOIN dept d ON e.DEPTNO = d.DEPTNO WHERE (e.SAL, e.COMM) IN (SELECT e2.SAL, e2.COMM FROM emp e2 JOIN dept d2 ON e2.DEPTNO = d2.DEPTNO WHERE d2.LOC = 'DALLAS');
+
+11.List out the common jobs in Research and Accounting Departments in ascending order.
+
+SELECT e.JOB FROM emp e JOIN dept d ON e.DEPTNO = d.DEPTNO WHERE d.DNAME IN ('Research','Accounting') GROUP BY e.JOB HAVING COUNT(DISTINCT d.DNAME) = 2 ORDER BY e.JOB ASC;

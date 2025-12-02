@@ -1,0 +1,104 @@
+1.Display the Employee Name, Job, and Start Date of Employees hired from February 1981 to May 1981.
+
+select ename, job, hiredate from emp where (month(hiredate) between 2 and 5) and (year(hiredate) = 1981) ;
+
+2.Display the Name and Hiredate of every Employee who was hired in 1982.
+
+select ename, hiredate from emp where year(hiredate) = 1982;
+
+3.Write a query to display the current date. Label the column as Current Date.
+
+select curdate() `Current Date`;
+
+4.Display the Employee’s Name, Hiredate, Salary and Review Date, which is first Monday after six months of service.
+
+select ename, hiredate, sal, adddate(hiredate, interval 6 month) `Review Date` from emp;
+
+5.Modify the query to display the dates as “Sunday, the Seventh of September, 1981”.
+
+select ename, hiredate, sal, concat(dayname(hiredate), ', ', date_format(hiredate, '%D'), ' of ', monthname(hiredate), ', ', year(hiredate)) `Review Date` from emp;
+
+6.Create a query to display the name and salary for all Employees. Format the salary to be 15 characters long by adding ‘$’.
+
+select ename, lpad(sal, 15, '$') from emp;
+
+7.Display the Name, Hiredate and day of the week on which the employees started. Order the results by the Day of the week starting with Monday.
+
+select ename, hiredate, dayname(hiredate) from emp order by weekday(hiredate);
+
+8.Display details of orders received in the year 1986. 
+
+select * from ord where year(orderdate) = 1986;
+
+9.Write a query to find out the DAY (for example, SUNDAY) of the current date.
+
+select dayname(curdate());
+
+10.Display the name and the date of joining of the employees who belong to department number 10. The date of joining should be formatted. For eg. if it is ‘10-JUN-97’ it should be displayed as Fifteenth JUNE, 1997. The name of the employee should be in upper case.
+
+select ucase(ename), concat(date_format(hiredate, '%D'), ' ', monthname(hiredate), ', ', year(hiredate)) `Date of Joining` from emp where deptno = 10;
+
+11.Consider the Ord table. Find the difference between the Order Date and Ship Date in months as well as days. Label the columns appropriately.
+select orderdate, shipdate ,subdate(orderdate, interval month(shipdate) month) `Month difference`, subdate(orderdate, interval day(shipdate) day) `Day difference` from ord;
+
+12.List employee details who have joined in December.
+
+select * from emp where month(hiredate) = 12;
+
+13.Display day on which KING joined.
+
+select dayname(hiredate) from emp where ename = 'king';
+
+14.Display month on which MARTIN joined.
+
+select monthname(hiredate) from emp where ename = 'martin';
+
+15.Find number of days elapsed between today’s date and hiredate of ‘ADAMS’.
+
+select datediff(curdate(), hiredate) `Number of days elapsed` from emp where ename = 'adams';
+
+16.Print the date, 15 days alter today’s date.
+
+select adddate(curdate(), interval 15 day);
+
+17.List all employee hired in the month of December.
+
+select * from emp where month(hiredate) = 12;
+
+18.List all employee hired after 1980.
+
+select * from emp where year(hiredate) > 1980;
+
+19.Display names and jobs of employee in the format SMITH-CLERK.
+
+select ename, job, concat(ename, '-', job) from emp;
+
+20.Show the length of names in EMP table. Eliminate duplicate length. Do not show the names.
+
+select distinct length(ename) from emp;
+
+21.List the names and hiredate of EMP in dept 20, display hiredate formatted as 12/03/1984.
+
+select ename, date_format(hiredate, '%d/%m/%Y') Hiredate from emp where deptno = 20;
+
+22.Find the day of week on which SMITH joined.
+
+select dayofweek(hiredate) from emp where ename='smith';
+
+
+
+23.Retrieve the ANALYST record with hiredate formatted as ‘The 3rd of Oct. 1984’.
+
+select ename, concat('The ', date_format(hiredate, '%D'), ' of ', date_format(hiredate, '%b'), '. ', year(hiredate)) `Joining Date`, job from emp where job='analyst';
+
+24.Calculate the total compensation expensive for each dept in 1 year. Assume that employees, who don't earn commission, receive non-monetary benefits than are worth Rs.1000 a month.
+
+select  sum(ifnull(comm, 1000)*12), deptno from emp group by deptno;
+
+25.Display the Names of the Managers as follows-
+a.If the employee code is 7788 the Manager is CLARK
+b.If the employee code is 7698 the Manager is BLAKE
+c.If the employee code is 7566 the Manager is JONES
+d.For all other Employees the Manager is KING
+
+select case when empno=7782 then concat('manager is ', ename) when empno=7698 then concat('manager is ', ename) when empno=7566 then concat('manager is ', ename) else 'manager is KING' end ename from emp where job = 'manager';
